@@ -19,7 +19,7 @@ function Index (data) {
   return (
       <Def>
           <main>
-              <h1>Places to Rant or Rave or just be nice to</h1>
+              <h1>REST-Rant</h1>
               <div className='row'>
                  {placesFormatted}
               </div>

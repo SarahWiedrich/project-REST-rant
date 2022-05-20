@@ -1,16 +1,19 @@
 require ('dotenv').config()
 const express = require('express')
 const placeRoutes = require('./controllers/places')
+const methodOverride = require('method-override')
 
 const app = express()
 
-// app.use('/places', require('./controllers/places'))
 
+//middleware/express settings
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 
-app.use(express.static('public', placeRoutes))
+//routes
+app.use(express.static('public'))
 app.use('/places', placeRoutes)
 
 app.get('/', (req, res) => {

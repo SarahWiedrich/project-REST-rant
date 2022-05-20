@@ -1,6 +1,7 @@
 const React = require('react')
 const Def = require('./default')
 
+//home page localhost:3000
 function home () {
     return (
         <Def>

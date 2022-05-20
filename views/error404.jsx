@@ -1,6 +1,7 @@
 const React = require('react')
 const Def = require('./default')
 
+// error page with puppy face//
 function error404 () {
     return (
         <Def>

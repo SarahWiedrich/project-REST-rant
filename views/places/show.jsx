@@ -10,11 +10,11 @@ function show (data) {
                 <img className="card-img-top" src={data.place.pic} alt={data.place.name}/>
             <div className="card-body">
             <h5 className="card-title">{data.place.name}</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p className="card-text">{data.place.showEstablished()} Cuisine: {data.place.cuisines}</p>
             </div>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item">City: {data.place.city}</li>
-                    <li className="list-group-item">State: {data.place.city}</li>
+                    <li className="list-group-item">State: {data.place.state}</li>
                     <li className="list-group-item">Cuisines: {data.place.cuisines}</li>
                 </ul>
                 <div>

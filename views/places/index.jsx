@@ -17,13 +17,16 @@ function Index (data) {
               <p className='text-center'>
                  Located In {place.city}, {place.state}
               </p>
+              <p className = 'text-center'>
+                  Founded in {place.founded}
+              </p>
           </div>
       )
   })
   return (
       <Def>
           <main>
-              <h1>REST-Rant</h1>
+              <h1>Places to Rant or Rave or just be nice to</h1>
               <div className='row'>
                  {placesFormatted}
               </div>

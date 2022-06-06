@@ -7,7 +7,7 @@ async function seed() {
     let comment = await db.Comment.create({
         author: 'Famished Fran',
         rant: false,
-        starts: 5.0,
+        stars: 5.0,
         content: "Wow, simply amazing! Highly recommended!"
     })
     //add that comment to the place's comment array

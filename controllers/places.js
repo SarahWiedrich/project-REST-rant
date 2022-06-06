@@ -1,7 +1,7 @@
 const router = require ('express').Router()
 const places = require('../models/places.js')
 const db = require('../models')
-const { acceptsEncodings } = require('express/lib/request')
+
 
 //Create Routes
 //Create one GET
@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   db.Place.findById(req.params.id).populate('comments')
   .then(place => {
-    console.log(place.comments)
+    // console.log(place.comments)
     res.render('places/show', { place })
   })
   .catch(err => {
@@ -50,7 +50,6 @@ router.post('/', (req, res) => {
           message += `${field} was ${err.errors[field].value}.`
           message += `${err.errors[field].message}`
         }
-        console.log('Validation error message', message)
         res.render('places/new', { message })
     }
     else {
@@ -61,151 +60,74 @@ router.post('/', (req, res) => {
 
 //Delete Place
 router.delete('/:id', (req, res) => {
-  let id = Number(req.params.id)
-  if(isNaN(id)){
-    res.render('error404')
-  } else if (!places[id]) {
-    res.render('error404')
-  } else{
-    places.splice(id, 1)
+  db.Place.findByIdAndDelete(req.params.id)
+  .then(place => {
     res.redirect('/places')
-  }
+  })
+  .catch(err => {
+    console.log('err', err)
+    res.render('error404')
+  })
 })
+
+
 
 //Edit Place
 router.get('/:id/edit', (req, res) => {
-  let id = Number(req.params.id)
-  if (isNaN(id)) {
+ db.Place.findById(req.params.id)
+  .then(place => {
+    res.render('places/edit', { place })
+  })
+  .catch(err => {
     res.render('error404')
-  } else {
-    res.render('places/edot', { place: places[id], id })
-  }
+  })
 })
 
 router.put('/:id', (req,res) => {
-  let id = Number(req.params.id)
-  if (isNaN(id)) {
+  db.Place.findByIdAndUpdate(req.params.id, req.body)
+  .then(() => {
+    res.redirect(`/places/${req.params.id}`)
+  })
+  .catch(err => {
+    console.log('err', err)
     res.render('error404')
-  } else if (!places[id]) {
-    res.render('error404')
-  } else {
-    if(!req.body.pic) {
-      req.body.pic = 'http://placekitten.com/400/400'
-    }
-    if(!req.body.city) {
-      req.body.city = 'Anytown'
-    }
-    if(!req.body.state) {
-      req.body.state = 'USA'
-    }
-    places[id] = req.body
-    res.redirect(`/places/${id}`)
-  }
+  })
 })
 
+//Add comment
 router.post('/:id/comment', (req, res) => {
-  req.body.rant = req.body.rant ? true : false
+  // req.body.rant = req.body.rant ? true : false
+  // db.Place.findById(req.params.id)
+  //   .then(place => {
+  //     place.comments.push(comment.id)
+  //     place.save()
+  //     .then(() => {
+  //       res.redirect(`/places'${req.params.id}`)
+  //     })
+  //   })
+  //   .catch(err => {
+  //     console.log('err', err)
+  //     res.render('error404')
+  //   })
+  req.body.rant === 'on' ? req.body.rant = true : req.body.rant = false;
   db.Place.findById(req.params.id)
-    .then(place => {
-      place.comments.push(comment.id)
-      place.save()
-      .then(() => {
-        res.redirect(`/places'${req.params.id}`)
+  .then(place => {
+      db.Comment.create(req.body)
+      .then(comment => {
+          place.comments.push(comment.id)
+          place.save()
+          .then(() => {
+              res.redirect(`/places/${req.params.id}`)
+          })
       })
-    })
-    .catch(err => {
-      console.log('err', err)
+      .catch(err => {
+          res.render('error404')
+      })
+  })
+  .catch(err => {
       res.render('error404')
-    })
+  })
 })
+
 
 module.exports = router
-
-////??? My good code below
-
-// router.get('/', (req, res) => { 
-//     res.render('places/index', { places })
-//   })
-
-//   router.get('/new', (req,res) => {
-//     res.render('places/new')
-//   })
-
-//   router.get('/:id', (req, res) => {
-//     let id = Number(req.params.id)
-//     if (isNaN(id)) {
-//       res.render('error404')
-//     }
-//     else if (!places[id]) {
-//       res.render('error404')
-//     }
-//     else {
-//       res.render('places/show', { place: places[id], id })
-//     }
-//   })
-
-//   router.get('/:id/edit', (req, res) => {
-//     let id = Number(req.params.id)
-//     if (isNaN(id)) {
-//       res.render('error404')
-//     }
-//     else if (!places[id]) {
-//       res.render('error404')
-//     }
-//     else {
-//       res.render('places/edit', { place: places[id], id })
-//     }
-//   })
-
-//   router.post('/', (req, res) => {
-//     if (!req.body.pic){
-//       req.body.pic = 'http://placekitten.com/400/400'
-//     }
-//     if (!req.body.city) {
-//       req.body.city = 'Anytown'
-//     }
-//     if (!req.body.state) {
-//       req.body.state = 'USA'
-//     }
-//     places.push(req.body)
-//     res.redirect('/places')
-//   })
-
-//   router.delete('/:id', (req, res) => {
-//     let id = Number(req.params.id)
-//     if (isNaN(id)) {
-//       res.render('error404')
-//     }
-//     else if (!places[id]) {
-//       res.render('error404')
-//     }
-//     else {
-//       places.splice(id, 1)
-//       res.redirect('/places')
-//     }
-//   })
-  
-//   router.put('/:id', (req, res) => {
-//     let id = Number(req.params.id)
-//     if (isNaN(id)) {
-//       res.render('error404')    
-//     }
-//     else if (!places[id]) {
-//       res.render('error404')
-//     }
-//     else {
-//       if (!req.body.pic) {
-//         req.body.pic = 'http://placekitten.com/400/400'
-//       }
-//       if (!req.body.city) {
-//         req.body.city = 'Anytown'
-//       }
-//       if (!req.body.state) {
-//         req.body.state = 'USA'
-//       }
-//       places[id] = req.body
-//       res.redirect(`/places/${id}`)
-//     }
-//   })
-
-// module.exports = router

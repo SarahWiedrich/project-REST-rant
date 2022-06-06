@@ -68,4 +68,19 @@ body {
     margin-left: 20px;
     background-color: white;
   }
-  
+
+  .card {
+      display: flex;
+      margin: auto;
+  }
+
+  .form-control {
+      width: 400px;
+      margin: auto;
+      position: relative;
+      display: block;
+  }
+
+  .btn {
+      margin: 5px;
+  }
